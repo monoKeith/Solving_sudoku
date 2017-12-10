@@ -1,3 +1,6 @@
+#import time
+import time
+
 #This function can Read the map file and return it as a string
 def load_file(filename):
     filevar = open(filename)
@@ -115,11 +118,28 @@ def modify_su(su_map, dictionary, solution):
         case_count += 1
     return su_map
 
+#This function fills some blanks that are obviosily already had an answer.
+def fill_information(su_map):
+    modified, result_map, dictionary = True, su_map, generate_candidate(su_map)
+    #If there're modifications during the fill_information section, run again, until there're no more to change.
+    while modified:
+        modified = False
+        #If there are only one possible answer, fill the blank.
+        for case in dictionary:
+            if len(case[2]) == 1:
+                result_map[case[0]][case[1]] = case[2][0]
+                modified = True
+        if modified == True:
+            dictionary = generate_candidate(result_map)
+    return result_map
+
 #Main function
 def main():
-    mapsu = load_file("simplemap.dat")
+    starting_time = time.time()
+    mapsu = load_file("map.dat")
     mapsu = generate_list(mapsu)
     print_map(mapsu)
+    mapsu = fill_information(mapsu)
     dic = generate_candidate(mapsu)
     max_list = max_attempts(dic)
     #Init blank solution
@@ -132,7 +152,12 @@ def main():
     while finding:
         current_su = modify_su(mapsu, dic, solution)
         #Check
-        if check_answer(current_su):
+        new_candidate, wrong = generate_candidate(current_su), False
+        for c_candidate in new_candidate:
+            print(new_candidate)
+            if c_candidate[2] == []:
+                wrong = True
+        if (not wrong) and check_answer(current_su):
             finding = False
         else:
             solution[digit] += 1
@@ -145,6 +170,7 @@ def main():
                 chk += 1
     print('Answer Found!')
     print_map(current_su)
+    print('Time consume is:', time.time() - starting_time, 'Seconds!')
 
 main()
 #print(check_answer(generate_list(load_file('simplemap.dat'))))
