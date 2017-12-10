@@ -172,5 +172,5 @@ def main():
     print_map(current_su)
     print('Time consume is:', time.time() - starting_time, 'Seconds!')
 
+#Call main function
 main()
-#print(check_answer(generate_list(load_file('simplemap.dat'))))
