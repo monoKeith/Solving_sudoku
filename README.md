@@ -30,3 +30,9 @@ The frequency is really low, because it generaetes a lot of ridiculous solutions
 However it's capable for solving small size problems (like 25 empty box). 
 My MacBook solves the answer for 25 empty box in 1 seconds.
 
+# Smarter Approach
+A fill_information function was added in this approach. The program would try to fill in the blanks that are very obvious, bofore it tries to crack by attempting every possibilities. 
+
+The fill_information will first fill thost blanks which has only one possibilities (by checking their neighbour), if the modification made some other blanks that has more than one possibilities reduced their problem size to just one possibilities, loop the whole process, until there're no more informations could be fill by their neighbour.
+
+In most cases, it shorts the problem size really quickly and performs very fast. It solves the same problem for 'Half naive approach' in just 0.04 seconds.
