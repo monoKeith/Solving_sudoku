@@ -139,7 +139,7 @@ def fill_information(su_map):
 #Main function
 def main():
     starting_time = time.time()
-    mapsu = load_file("map.dat")
+    mapsu = load_file("simplemap.dat")
     mapsu = generate_list(mapsu)
     print_map(mapsu)
     mapsu = fill_information(mapsu)
