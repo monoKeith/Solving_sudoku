@@ -117,7 +117,7 @@ def modify_su(su_map, dictionary, solution):
 
 #Main function
 def main():
-    mapsu = load_file("map.dat")
+    mapsu = load_file("simplemap.dat")
     mapsu = generate_list(mapsu)
     print_map(mapsu)
     dic = generate_candidate(mapsu)
