@@ -1,5 +1,6 @@
 #import time
 import time
+import copy
 
 #This function can Read the map file and return it as a string
 def load_file(filename):
@@ -121,27 +122,26 @@ def fill_information(su_map):
     return result_map
 
 #This function trys to fill blanks by guessing.
-def try_attempt(su_map):
+def try_attempt(last_map):
+    su_map = copy.deepcopy(last_map)
+    su_map = fill_information(su_map)
     #Generate candidates list.
     candidates = generate_candidate(su_map)
     #Check if there're possibility for each blank.
     if candidates == []:
         if check_answer(su_map):
-            return su_map, None
-        return False, None
+            return su_map
+        return False
     for candidate in candidates:
         if candidate[2] == []:
-            return False, None
+            return False
     #Attempt an answer for the blank.
     for answer in candidates[0][2]:
         su_map[candidates[0][0]][candidates[0][1]] = answer
-        #processing = fill_information(processing)
-        (processing, last) = try_attempt(su_map)
+        processing = try_attempt(su_map)
         if processing != False:
-            return processing, None
-        if last != None:
-            su_map[last[0]][last[1]] = 0
-    return False, candidates[0]
+            return processing
+    return False
 
 #This function takes 2 arguments, previous map and final map, and it prints out the differences by using colour.
 def colour_map(original_map, final_map):
@@ -166,22 +166,19 @@ def main():
     filename = input('Please input the name of the sudoku file:')
     starting_time = time.time()
     mapsu = load_file(filename)
-    processing_map = generate_list(mapsu)
-    abc = processing_map
+    mapsu = generate_list(mapsu)
+    ori_map = copy.deepcopy(mapsu)
     #Print out the original map.
-    print_map(processing_map)
+    print_map(mapsu)
     #Fill informations and print the map again.
-    processing_map = fill_information(processing_map)
-    #print('After Filling Informations:')
-    #print_map(mapsu)
+    mapsu = fill_information(mapsu)
     #Try attempts
-    (processing_map, _) = try_attempt(processing_map)
-
+    mapsu = try_attempt(mapsu)
     #If the correst answer does exists, print it out.
-    if processing_map != False:
+    if mapsu != False:
         #Print out the time consume.
         print('  Finished in ', round((time.time() - starting_time), 10), 'seconds')
-        colour_map(abc, processing_map)
+        colour_map(ori_map, mapsu)
     else:
         print("Can't find the answer for this question.")
 
