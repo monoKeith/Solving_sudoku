@@ -159,7 +159,7 @@ def colour_map(original_map, final_map):
             else:
                 line += (' \x1b[36m' + str(final_num))
         print(line + '\x1b[0m')
-    print(' \x1b[0m' + '  =================================')
+    print('  =================================')
 
 #Main function
 def main():
@@ -167,7 +167,7 @@ def main():
     filename = input('Please input the name of the sudoku file:')
     starting_time = time.time()
     mapsu = load_file(filename)
-    mapsu = generate_list(mapsu)
+    mapsu, ori_map = generate_list(mapsu), generate_list(mapsu)
     #Print out the original map.
     print_map(mapsu)
     #Fill informations and print the map again.
@@ -181,7 +181,7 @@ def main():
     if mapsu != False:
         #Print out the time consume.
         print('  Finished in ', round((time.time() - starting_time), 10), 'seconds')
-        colour_map(generate_list(load_file(filename)), mapsu)
+        colour_map(ori_map, mapsu)
     else:
         print("Can't find the answer for this question.")
 
