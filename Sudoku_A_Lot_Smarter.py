@@ -147,25 +147,26 @@ def try_attempt(su_map):
 #Main function
 def main():
     #Load files, and record the starting time.
+    filename = input('Please input the name of the sudoku file:')
     starting_time = time.time()
-    mapsu = load_file("empty.dat")
+    mapsu = load_file(filename)
     mapsu = generate_list(mapsu)
     #Print out the original map.
     print_map(mapsu)
     #Fill informations and print the map again.
     mapsu = fill_information(mapsu)
-    print('After Filling Informations:')
-    print_map(mapsu)
+    #print('After Filling Informations:')
+    #print_map(mapsu)
     #Try attempts
     (mapsu, _) = try_attempt(mapsu)
     #If the correst answer does exists, print it out.
     if mapsu != False:
-        print('After Trying to Attempt:')
+        #Print out the time consume.
+        print('  Finished in:', round((time.time() - starting_time), 10), 'seconds')
         print_map(mapsu)
     else:
         print("Can't find the answer for this question.")
-    #Print out the time consume.
-    print('Time consumed:', time.time() - starting_time, 'seconds.')
+
 
 #Call main function
 main()
