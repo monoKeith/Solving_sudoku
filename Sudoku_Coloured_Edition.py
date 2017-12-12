@@ -144,6 +144,23 @@ def try_attempt(su_map):
             su_map[last[0]][last[1]] = 0
     return False, candidates[0]
 
+#This function takes 2 arguments, previous map and final map, and it prints out the differences by using colour.
+def colour_map(original_map, final_map):
+    #from colorama import init
+    print('  ========== S U D O K U ==========')
+    for row_num in range(9):
+        line = ''
+        print('\t', end = ' ')
+        for column_num in range(9):
+            original_num = original_map[row_num][column_num]
+            final_num = final_map[row_num][column_num]
+            if original_num == final_num:
+                line += (' \x1b[31m' + str(final_num))
+            else:
+                line += (' \x1b[36m' + str(final_num))
+        print(line + '\x1b[0m')
+    print(' \x1b[0m' + '  =================================')
+
 #Main function
 def main():
     #Load files, and record the starting time.
@@ -159,11 +176,12 @@ def main():
     #print_map(mapsu)
     #Try attempts
     (mapsu, _) = try_attempt(mapsu)
+
     #If the correst answer does exists, print it out.
     if mapsu != False:
         #Print out the time consume.
         print('  Finished in ', round((time.time() - starting_time), 10), 'seconds')
-        print_map(mapsu)
+        colour_map(generate_list(load_file(filename)), mapsu)
     else:
         print("Can't find the answer for this question.")
 
