@@ -33,30 +33,28 @@ def check_answer(su_map):
         current_list = su_map[row_num]
         for num in range(1,10):
             if not num in current_list:
-                correct = False
+                return False
     #Check each column
-    if correct:
-        for column_num in range(9):
+    for column_num in range(9):
+        current_list = []
+        for tmp in range(9):
+            current_list.append(su_map[column_num][tmp])
+        for num in range(1,10):
+            if not num in current_list:
+                return False
+    #Check each square
+    for sq_row in range(0,7,3):
+        for sq_column in range(0,7,3):
+            #Gererate a list contains the nine numbers in that particular square.
             current_list = []
-            for tmp in range(9):
-                current_list.append(su_map[column_num][tmp])
+            for sr in range(3):
+                for sq in range(3):
+                    current_list.append(su_map[sq_row + sr][sq_column + sq])
             for num in range(1,10):
                 if not num in current_list:
-                    correct = False
-    #Check each square
-    if correct:
-        for sq_row in range(0,7,3):
-            for sq_column in range(0,7,3):
-                #Gererate a list contains the nine numbers in that particular square.
-                current_list = []
-                for sr in range(3):
-                    for sq in range(3):
-                        current_list.append(su_map[sq_row + sr][sq_column + sq])
-                for num in range(1,10):
-                    if not num in current_list:
-                        correct = False
-    #Return value
-    return correct
+                    return False
+    #Return value if all
+    return True
 
 #This function will print out the state in terminal.
 def print_map(su_map):
@@ -106,21 +104,6 @@ def generate_candidate(su_map):
                 candidate_dic.append([row,column,considerable_num])
     return candidate_dic
 
-#This function generates a list that tells the maximum attempts for each box.
-def max_attempts(dictionary):
-    attempts = []
-    for box in dictionary:
-        attempts.append(len(box[2])-1)
-    return attempts
-
-#This function modifies the original map and return the new map.
-def modify_su(su_map, dictionary, solution):
-    case_count = 0
-    for case in dictionary:
-        su_map[case[0]][case[1]] = case[2][solution[case_count]]
-        case_count += 1
-    return su_map
-
 #This function fills some blanks that are obviosily already had an answer.
 def fill_information(su_map):
     modified, result_map, dictionary = True, su_map, generate_candidate(su_map)
@@ -132,50 +115,57 @@ def fill_information(su_map):
             if len(case[2]) == 1:
                 result_map[case[0]][case[1]] = case[2][0]
                 modified = True
+                break
         if modified == True:
             dictionary = generate_candidate(result_map)
     return result_map
 
+#This function trys to fill blanks by guessing.
+def try_attempt(su_map):
+    #Generate candidates list.
+    candidates = generate_candidate(su_map)
+    original_map = su_map
+    #Check if there're possibility for each blank.
+    if candidates == []:
+        if check_answer(su_map):
+            return su_map, None
+        return False, None
+    for candidate in candidates:
+        if candidate[2] == []:
+            return False, None
+    #Attempt an answer for the blank.
+    for answer in candidates[0][2]:
+        su_map[candidates[0][0]][candidates[0][1]] = answer
+        #processing = fill_information(processing)
+        (processing, last) = try_attempt(su_map)
+        if processing != False:
+            return processing, None
+        if last != None:
+            su_map[last[0]][last[1]] = 0
+    return False, candidates[0]
+
 #Main function
 def main():
+    #Load files, and record the starting time.
     starting_time = time.time()
-    mapsu = load_file("simplemap.dat")
+    mapsu = load_file("empty.dat")
     mapsu = generate_list(mapsu)
+    #Print out the original map.
     print_map(mapsu)
+    #Fill informations and print the map again.
     mapsu = fill_information(mapsu)
     print('After Filling Informations:')
     print_map(mapsu)
-    dic = generate_candidate(mapsu)
-    max_list = max_attempts(dic)
-    #Init blank solution
-    solution, digit = [], 0
-    for i in range(len(max_list)):
-        solution.append(0)
-    length_calc = len(max_list) - 1
-    #Start to try
-    current_su, finding = mapsu, True
-    while finding:
-        current_su = modify_su(current_su, dic, solution)
-        #Check
-        new_candidate, wrong = generate_candidate(current_su), False
-        for c_candidate in new_candidate:
-            print(new_candidate)
-            if c_candidate[2] == []:
-                wrong = True
-        if (not wrong) and check_answer(current_su):
-            finding = False
-        else:
-            solution[digit] += 1
-            #check
-            chk = digit
-            while solution[chk] > max_list[chk]:
-                if chk != length_calc:
-                    solution[chk + 1] += 1
-                solution[chk] = 0
-                chk += 1
-    print('Answer Found!')
-    print_map(current_su)
-    print('Time consume is:', time.time() - starting_time, 'Seconds!')
+    #Try attempts
+    (mapsu, _) = try_attempt(mapsu)
+    #If the correst answer does exists, print it out.
+    if mapsu != False:
+        print('After Trying to Attempt:')
+        print_map(mapsu)
+    else:
+        print("Can't find the answer for this question.")
+    #Print out the time consume.
+    print('Time consumed:', time.time() - starting_time, 'seconds.')
 
 #Call main function
 main()
