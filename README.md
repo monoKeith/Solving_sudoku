@@ -36,3 +36,16 @@ A fill_information function was added in this approach. The program would try to
 The fill_information will first fill thost blanks which has only one possibilities (by checking their neighbour), if the modification made some other blanks that has more than one possibilities reduced their problem size to just one possibilities, loop the whole process, until there're no more informations could be fill by their neighbour.
 
 In most cases, it shorts the problem size really quickly and performs very fast. It solves the same problem for 'Half naive approach' in just 0.04 seconds.
+
+# A Lot Smarter
+Using a function call try_attempt to replace the old main function. In this way, the problem size is significantily reduced.
+
+In general, after trying to fill the obvious informations in the blanks, it starts to try putting a number (from the possibility list) in one of the empty box, then refresh the possibility list. And try putting another number in another empty box...... until it detects there's mistakes (detects empty possibilit list for any unfilled box or detects duplicated numbers). When there's mistake detected, the recursive function goes back and change the value.....
+
+It's way more faster because it doesn't try as much attempts as the 'Smarter Approach' and 'Half Naive Approach', and also detects mistakes before it the mistake happens.
+
+# Coloured Edition
+Add colors to the 'A Lot Smarter' approach. Original numbers would display as red, filled boxes would display as green.
+
+# BOSS
+It's faster than the 'A Lot Smarter' approach. It tries to fill the blank every time the attemps happens, which saves a lot of unnecessary attempts.
