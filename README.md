@@ -49,3 +49,9 @@ Add colors to the 'A Lot Smarter' approach. Original numbers would display as re
 
 # BOSS
 It's faster than the 'A Lot Smarter' approach. It tries to fill the blank every time the attemps happens, which saves a lot of unnecessary attempts.
+
+# SUPER
+It's faster for some complicated problems but slower for some simple problems.
+This approach will sort the possibility list by the length (numbers of items on the list), and then do the attemp. For those complicated (large size) problems, it would save a lot of time on attempting. Because it does the simple work first, at the same time it reduces the amount of calculation before it detects error. Having an effect that it tries fewer attempts than the BOSS solution for larger size problems.
+
+The sorting part is based on merge sort, which is a really fast way to rearrange the possibility list.
